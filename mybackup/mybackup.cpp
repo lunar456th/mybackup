@@ -1,3 +1,7 @@
+/**
+ * Copyright â“’ 2017 lunar456th@naver.com All rights reserved.
+ */
+
 #include <stdio.h>
 #include <string.h>
 #include <io.h>
@@ -11,9 +15,9 @@
 
 #pragma warning(disable:4996) // _CRT_SECURE_NO_WARNINGS
 
-static FILE * log; // ·Î±× ÆÄÀÏ
+static FILE * log; // ë¡œê·¸ íŒŒì¼
 
-void _CreateDirectory(LPCTSTR dstPath) // µğ·ºÅä¸® Àç±Í »ı¼º ÇÔ¼ö
+void _CreateDirectory(LPCTSTR dstPath) // ë””ë ‰í† ë¦¬ ì¬ê·€ ìƒì„± í•¨ìˆ˜
 {
 	char pathBuffer[MAX_PATH];
 
@@ -22,13 +26,13 @@ void _CreateDirectory(LPCTSTR dstPath) // µğ·ºÅä¸® Àç±Í »ı¼º ÇÔ¼ö
 	for (int i = 0; i <= len; i++)
 	{
 		pathBuffer[i] = *(dstPath + i);
-		if (pathBuffer[i] == '\\' || pathBuffer[i] == '/' || i == len) // °æ·Î°¡ ÀÌ¹Ì Á¸ÀçÇÏ´ÂÁö Ã¼Å©
+		if (pathBuffer[i] == '\\' || pathBuffer[i] == '/' || i == len) // ê²½ë¡œê°€ ì´ë¯¸ ì¡´ì¬í•˜ëŠ”ì§€ ì²´í¬
 		{
-			pathBuffer[i + 1] = NULL; // ³Î¹®ÀÚ Âï±â
-			if (_access(pathBuffer, 0) != 0) // Á¸ÀçÇÏÁö ¾ÊÀ¸¸é »ı¼º
+			pathBuffer[i + 1] = NULL; // ë„ë¬¸ì ì°ê¸°
+			if (_access(pathBuffer, 0) != 0) // ì¡´ì¬í•˜ì§€ ì•Šìœ¼ë©´ ìƒì„±
 			{
 				CreateDirectory(pathBuffer, NULL);
-				printf("dst path°¡ Á¸ÀçÇÏÁö ¾Ê¾Æ¼­ »ı¼ºÇß½À´Ï´Ù!: %s\n", dstPath);
+				printf("dst pathê°€ ì¡´ì¬í•˜ì§€ ì•Šì•„ì„œ ìƒì„±í–ˆìŠµë‹ˆë‹¤!: %s\n", dstPath);
 			}
 		}
 	}
@@ -36,146 +40,146 @@ void _CreateDirectory(LPCTSTR dstPath) // µğ·ºÅä¸® Àç±Í »ı¼º ÇÔ¼ö
 
 void myBackUp(char * srcPath, char * dstPath)
 {
-	// src °æ·ÎÀÇ ÆÄÀÏÀÌ Á¸ÀçÇÏ´ÂÁö È®ÀÎÇÏ°í, ¸¸¾à ¾øÀ¸¸é ¿¡·¯ ¸Ş½ÃÁö Ãâ·Â.
+	// src ê²½ë¡œì˜ íŒŒì¼ì´ ì¡´ì¬í•˜ëŠ”ì§€ í™•ì¸í•˜ê³ , ë§Œì•½ ì—†ìœ¼ë©´ ì—ëŸ¬ ë©”ì‹œì§€ ì¶œë ¥.
 	struct _stat stat_srcPath;
 	if (_stat(srcPath, &stat_srcPath) != 0) {
 		switch (errno) {
 		case ENOENT:
-			fprintf(stderr, "%s ÆÄÀÏÀ» Ã£À» ¼ö ¾øÀ½.\n", srcPath);
+			fprintf(stderr, "%s íŒŒì¼ì„ ì°¾ì„ ìˆ˜ ì—†ìŒ.\n", srcPath);
 			break;
 		case EINVAL:
-			fprintf(stderr, "_stat ÆÄ¶ó¹ÌÅÍ ¿À·ù.\n");
+			fprintf(stderr, "_stat íŒŒë¼ë¯¸í„° ì˜¤ë¥˜.\n");
 			break;
 		default:
-			fprintf(stderr, "_stat ¿¹»óÄ¡ ¸øÇÑ ¿À·ù.\n");
+			fprintf(stderr, "_stat ì˜ˆìƒì¹˜ ëª»í•œ ì˜¤ë¥˜.\n");
 			break;
 		}
 		return;
 	}
 	else
 	{
-		printf("src path°¡ Á¸ÀçÇÕ´Ï´Ù!: %s\n", srcPath);
+		printf("src pathê°€ ì¡´ì¬í•©ë‹ˆë‹¤!: %s\n", srcPath);
 	}
 
 
-	// ¹é¾÷ÇÒ µğ·ºÅä¸®°¡ Á¸ÀçÇÏÁö ¾ÊÀ¸¸é »ı¼ºÇÑ´Ù.
+	// ë°±ì—…í•  ë””ë ‰í† ë¦¬ê°€ ì¡´ì¬í•˜ì§€ ì•Šìœ¼ë©´ ìƒì„±í•œë‹¤.
 	if (_access(dstPath, 0) != 0)
 	{
-		_CreateDirectory(dstPath); // CreateDirectoryÀÇ Àç±ÍÆÇ.
+		_CreateDirectory(dstPath); // CreateDirectoryì˜ ì¬ê·€íŒ.
 	}
 
 
-	// src °æ·Î°¡ µğ·ºÅä¸®°¡ ¾Æ´Ñ ´ÜÀÏ ÆÄÀÏÀÌ¸é ¹Ù·Î dstÆÄÀÏ Á¸Àç¿©ºÎ ¹× ¼öÁ¤ÀÏÀÚ ÆÄ¾ÇÇØ¼­ º¹»ç
+	// src ê²½ë¡œê°€ ë””ë ‰í† ë¦¬ê°€ ì•„ë‹Œ ë‹¨ì¼ íŒŒì¼ì´ë©´ ë°”ë¡œ dstíŒŒì¼ ì¡´ì¬ì—¬ë¶€ ë° ìˆ˜ì •ì¼ì íŒŒì•…í•´ì„œ ë³µì‚¬
 	if ((_S_IFDIR & stat_srcPath.st_mode) != _S_IFDIR)
 	{
 		struct _stat stat_dstPath;
 		_stat(dstPath, &stat_dstPath);
-		if (stat_dstPath.st_nlink > 0) // dstÆÄÀÏÀÌ Á¸ÀçÇÏ¸é
+		if (stat_dstPath.st_nlink > 0) // dstíŒŒì¼ì´ ì¡´ì¬í•˜ë©´
 		{
-			if (difftime(stat_srcPath.st_mtime, stat_dstPath.st_mtime) > 0) // ¼öÁ¤ÀÏÀÚ¸¦ ºñ±³ÇØ¼­ ¿¾³¯ÀÌ¸é
+			if (difftime(stat_srcPath.st_mtime, stat_dstPath.st_mtime) > 0) // ìˆ˜ì •ì¼ìë¥¼ ë¹„êµí•´ì„œ ì˜›ë‚ ì´ë©´
 			{
-				CopyFile(srcPath, dstPath, false); // º¹»çÇÑ´Ù. ÀÌ ÇÔ¼ö´Â MFC ÇÔ¼öÀÓ
-				printf("¼öÁ¤ÇÑ ³¯Â¥°¡ ¿¾³¯ÀÌ¾î¼­ ¹Ù²å½À´Ï´Ù!: %s\n", dstPath);
+				CopyFile(srcPath, dstPath, false); // ë³µì‚¬í•œë‹¤. ì´ í•¨ìˆ˜ëŠ” MFC í•¨ìˆ˜ì„
+				printf("ìˆ˜ì •í•œ ë‚ ì§œê°€ ì˜›ë‚ ì´ì–´ì„œ ë°”ê¿¨ìŠµë‹ˆë‹¤!: %s\n", dstPath);
 			}
 		}
-		else // Á¸ÀçÇÏÁö ¾ÊÀ¸¸é
+		else // ì¡´ì¬í•˜ì§€ ì•Šìœ¼ë©´
 		{
-			if (CopyFile(srcPath, dstPath, false) != 0) // º¹»ç ÇÔ¼ö·Î º¹»çÇÏ°í, nonzero¸é ¼º°øÇÑ °ÍÀÓ.
+			if (CopyFile(srcPath, dstPath, false) != 0) // ë³µì‚¬ í•¨ìˆ˜ë¡œ ë³µì‚¬í•˜ê³ , nonzeroë©´ ì„±ê³µí•œ ê²ƒì„.
 			{
-				printf("ÆÄÀÏÀÌ Á¸ÀçÇÏÁö ¾Ê¾Æ¼­ »ı¼ºÇß½À´Ï´Ù!: %s\n", dstPath);
+				printf("íŒŒì¼ì´ ì¡´ì¬í•˜ì§€ ì•Šì•„ì„œ ìƒì„±í–ˆìŠµë‹ˆë‹¤!: %s\n", dstPath);
 				fprintf(log, "%s\n", dstPath);
 			}
 			else
 			{
-				fprintf(stderr, "ÆÄÀÏ º¹»ç¿¡ ½ÇÆĞÇß½À´Ï´Ù.¤Ğ: %s\n", dstPath);
+				fprintf(stderr, "íŒŒì¼ ë³µì‚¬ì— ì‹¤íŒ¨í–ˆìŠµë‹ˆë‹¤.ã… : %s\n", dstPath);
 			}
 		}
 		return;
 	}
 
 
-	// src µğ·ºÅä¸® ³»ÀÇ ÆÄÀÏ ¸ñ·ÏÀ» Ãâ·ÂÇÑ´Ù.
+	// src ë””ë ‰í† ë¦¬ ë‚´ì˜ íŒŒì¼ ëª©ë¡ì„ ì¶œë ¥í•œë‹¤.
 	_finddata_t foundFile;
 	long findHandle;
 
 	_chdir(srcPath);
 	char curWorkDir[1024];
-	_getcwd(curWorkDir, 1024); // ÀÛ¾÷ µğ·ºÅä¸®¸¦ ¹İÈ¯ÇÏ´Â ÇÔ¼ö.
-	printf("\nÀÛ¾÷ µğ·ºÅä¸®: %s\n", curWorkDir);
-	findHandle = _findfirst(".\\*.*", &foundFile); // srcµğ·ºÅä¸® ³» ¸ğµç ÆÄÀÏÀ» Ã£´Â´Ù.
+	_getcwd(curWorkDir, 1024); // ì‘ì—… ë””ë ‰í† ë¦¬ë¥¼ ë°˜í™˜í•˜ëŠ” í•¨ìˆ˜.
+	printf("\nì‘ì—… ë””ë ‰í† ë¦¬: %s\n", curWorkDir);
+	findHandle = _findfirst(".\\*.*", &foundFile); // srcë””ë ‰í† ë¦¬ ë‚´ ëª¨ë“  íŒŒì¼ì„ ì°¾ëŠ”ë‹¤.
 
 	struct _stat stat_srcFile;
 
-	for (int findResult = 1; findResult != -1; findResult = _findnext(findHandle, &foundFile)) // µğ·ºÅä¸® ³»ÀÇ ÆÄÀÏµéÀ» ÇÏ³ª¾¿ ÀĞ¾î¿È
+	for (int findResult = 1; findResult != -1; findResult = _findnext(findHandle, &foundFile)) // ë””ë ‰í† ë¦¬ ë‚´ì˜ íŒŒì¼ë“¤ì„ í•˜ë‚˜ì”© ì½ì–´ì˜´
 	{
-		if (_stat(foundFile.name, &stat_srcFile) == 0) // ÆÄÀÏÀÇ ¸ŞÅ¸µ¥ÀÌÅÍ¸¦ °¡Á®¿À°í (0ÀÌ¸é ÆÄÀÏÀÌ Á¸ÀçÇÏ´Â °Í)
+		if (_stat(foundFile.name, &stat_srcFile) == 0) // íŒŒì¼ì˜ ë©”íƒ€ë°ì´í„°ë¥¼ ê°€ì ¸ì˜¤ê³  (0ì´ë©´ íŒŒì¼ì´ ì¡´ì¬í•˜ëŠ” ê²ƒ)
 		{
-			if (strcmp(foundFile.name, ".") == 0 || strcmp(foundFile.name, "..") == 0) // .ÀÌ³ª ..µµ ÀĞÈ÷´Âµ¥, ¾ê³×´Â °Ç³Ê¶Ùµµ·Ï ÇÔ
+			if (strcmp(foundFile.name, ".") == 0 || strcmp(foundFile.name, "..") == 0) // .ì´ë‚˜ ..ë„ ì½íˆëŠ”ë°, ì–˜ë„¤ëŠ” ê±´ë„ˆë›°ë„ë¡ í•¨
 			{
 				continue;
 			}
 
-			// Ã£Àº ÆÄÀÏÀÇ Àı´ë °æ·Î¸¦ ÀúÀå
+			// ì°¾ì€ íŒŒì¼ì˜ ì ˆëŒ€ ê²½ë¡œë¥¼ ì €ì¥
 			char srcAbsPath[1024] = "";
 			strcpy(srcAbsPath, srcPath);
 			strcat(srcAbsPath, "\\");
 			strcat(srcAbsPath, foundFile.name);
 
-			// º¹»çÇÒ °æ·ÎÀÇ Àı´ë °æ·Î¸¦ ÀúÀå
+			// ë³µì‚¬í•  ê²½ë¡œì˜ ì ˆëŒ€ ê²½ë¡œë¥¼ ì €ì¥
 			char dstAbsPath[1024] = "";
 			strcpy(dstAbsPath, dstPath);
 			strcat(dstAbsPath, "\\");
 			strcat(dstAbsPath, foundFile.name);
 
-			if ((_S_IFDIR & stat_srcFile.st_mode) != _S_IFDIR) // ¸ñ·Ï¿¡¼­ ÀĞÀº ÆÄÀÏÀÌ µğ·ºÅä¸®°¡ ¾Æ´Ñ °æ¿ì
+			if ((_S_IFDIR & stat_srcFile.st_mode) != _S_IFDIR) // ëª©ë¡ì—ì„œ ì½ì€ íŒŒì¼ì´ ë””ë ‰í† ë¦¬ê°€ ì•„ë‹Œ ê²½ìš°
 			{
 				struct _stat stat_dstFile;
 
-				if (_stat(dstAbsPath, &stat_dstFile) == 0) // ´ëÀÀµÇ´Â dstÆÄÀÏÀÌ ÀÌ¹Ì Á¸ÀçÇÏ¸é
+				if (_stat(dstAbsPath, &stat_dstFile) == 0) // ëŒ€ì‘ë˜ëŠ” dstíŒŒì¼ì´ ì´ë¯¸ ì¡´ì¬í•˜ë©´
 				{
-					if (difftime(stat_srcFile.st_mtime, stat_dstFile.st_mtime) > 0) // ¼öÁ¤ÀÏÀÚ¸¦ ºñ±³ÇØ¼­ ¿¾³¯ÀÌ¸é
+					if (difftime(stat_srcFile.st_mtime, stat_dstFile.st_mtime) > 0) // ìˆ˜ì •ì¼ìë¥¼ ë¹„êµí•´ì„œ ì˜›ë‚ ì´ë©´
 					{
-						if (CopyFile(srcAbsPath, dstAbsPath, false) != 0) // º¹»ç ÇÔ¼ö·Î º¹»çÇÏ°í, nonzero¸é ¼º°øÇÑ °ÍÀÓ.
+						if (CopyFile(srcAbsPath, dstAbsPath, false) != 0) // ë³µì‚¬ í•¨ìˆ˜ë¡œ ë³µì‚¬í•˜ê³ , nonzeroë©´ ì„±ê³µí•œ ê²ƒì„.
 						{
-							printf("¼öÁ¤ÇÑ ³¯Â¥°¡ ¿¾³¯ÀÌ¾î¼­ ¹Ù²å½À´Ï´Ù!: %s\\%s\n", dstPath, foundFile.name);
+							printf("ìˆ˜ì •í•œ ë‚ ì§œê°€ ì˜›ë‚ ì´ì–´ì„œ ë°”ê¿¨ìŠµë‹ˆë‹¤!: %s\\%s\n", dstPath, foundFile.name);
 							fprintf(log, "%s\n", dstAbsPath);
 						}
 						else
 						{
-							fprintf(stderr, "ÆÄÀÏ º¹»ç¿¡ ½ÇÆĞÇß½À´Ï´Ù.¤Ğ: %s\\%s\n", dstPath, foundFile.name);
+							fprintf(stderr, "íŒŒì¼ ë³µì‚¬ì— ì‹¤íŒ¨í–ˆìŠµë‹ˆë‹¤.ã… : %s\\%s\n", dstPath, foundFile.name);
 						}
 					}
 					else
 					{
-						printf("¼öÁ¤ÇÑ ³¯Â¥°¡ °°°Å³ª ´õ ÃÖ±ÙÀÌ¾î¼­ ¾È¹Ù²å½À´Ï´Ù.¤Ğ: %s\\%s\n", dstPath, foundFile.name);
+						printf("ìˆ˜ì •í•œ ë‚ ì§œê°€ ê°™ê±°ë‚˜ ë” ìµœê·¼ì´ì–´ì„œ ì•ˆë°”ê¿¨ìŠµë‹ˆë‹¤.ã… : %s\\%s\n", dstPath, foundFile.name);
 					}
 				}
-				else // ´ëÀÀ dstÆÄÀÏÀÌ Á¸ÀçÇÏÁö ¾ÊÀ¸¸é ±×³É º¹»ç
+				else // ëŒ€ì‘ dstíŒŒì¼ì´ ì¡´ì¬í•˜ì§€ ì•Šìœ¼ë©´ ê·¸ëƒ¥ ë³µì‚¬
 				{
 					CopyFile(srcAbsPath, dstAbsPath, false);
-					printf("ÆÄÀÏÀÌ Á¸ÀçÇÏÁö ¾Ê¾Æ¼­ »ı¼ºÇß½À´Ï´Ù!: %s\\%s\n", dstPath, foundFile.name);
+					printf("íŒŒì¼ì´ ì¡´ì¬í•˜ì§€ ì•Šì•„ì„œ ìƒì„±í–ˆìŠµë‹ˆë‹¤!: %s\\%s\n", dstPath, foundFile.name);
 					fprintf(log, "%s\n", dstAbsPath);
 				}
 			}
-			else // ¸ñ·Ï¿¡¼­ ÀĞÀº ÆÄÀÏÀÌ µğ·ºÅä¸®ÀÎ °æ¿ì´Â ±× µğ·ºÅä¸®ÀÇ °æ·Î¸¦ ³Ñ°ÜÁÖ°í Àç±Í·Î Å½»öÇÔ.
+			else // ëª©ë¡ì—ì„œ ì½ì€ íŒŒì¼ì´ ë””ë ‰í† ë¦¬ì¸ ê²½ìš°ëŠ” ê·¸ ë””ë ‰í† ë¦¬ì˜ ê²½ë¡œë¥¼ ë„˜ê²¨ì£¼ê³  ì¬ê·€ë¡œ íƒìƒ‰í•¨.
 			{
-				myBackUp(srcAbsPath, dstAbsPath); // Àç±Í
-				_chdir(".."); // Àç±Í ³¡³ª°í °æ·Î º¹±Í
-				_getcwd(curWorkDir, 1024); // º¹±ÍÇÑ ÀÛ¾÷ µğ·ºÅä¸®¸¦ Ãâ·ÂÇØÁÜ
-				printf("\nÀÛ¾÷ µğ·ºÅä¸®: %s\n", curWorkDir);
+				myBackUp(srcAbsPath, dstAbsPath); // ì¬ê·€
+				_chdir(".."); // ì¬ê·€ ëë‚˜ê³  ê²½ë¡œ ë³µê·€
+				_getcwd(curWorkDir, 1024); // ë³µê·€í•œ ì‘ì—… ë””ë ‰í† ë¦¬ë¥¼ ì¶œë ¥í•´ì¤Œ
+				printf("\nì‘ì—… ë””ë ‰í† ë¦¬: %s\n", curWorkDir);
 			}
 		}
-		else // ÆÄÀÏÀÇ ¸ŞÅ¸µ¥ÀÌÅÍ¸¦ °¡Á®¿ÀÁö ¸øÇÏ¸é ±× ÀÌÀ¯¿¡ µû¶ó ¿¡·¯¸Ş½ÃÁö Ãâ·Â.
+		else // íŒŒì¼ì˜ ë©”íƒ€ë°ì´í„°ë¥¼ ê°€ì ¸ì˜¤ì§€ ëª»í•˜ë©´ ê·¸ ì´ìœ ì— ë”°ë¼ ì—ëŸ¬ë©”ì‹œì§€ ì¶œë ¥.
 		{
 			switch (errno) {
 			case ENOENT:
-				fprintf(stderr, "%s ÆÄÀÏÀ» Ã£À» ¼ö ¾øÀ½.\n", srcPath);
+				fprintf(stderr, "%s íŒŒì¼ì„ ì°¾ì„ ìˆ˜ ì—†ìŒ.\n", srcPath);
 				break;
 			case EINVAL:
-				fprintf(stderr, "_stat ÆÄ¶ó¹ÌÅÍ ¿À·ù.\n");
+				fprintf(stderr, "_stat íŒŒë¼ë¯¸í„° ì˜¤ë¥˜.\n");
 				break;
 			default:
-				fprintf(stderr, "_stat ¿¹»óÄ¡ ¸øÇÑ ¿À·ù.\n");
+				fprintf(stderr, "_stat ì˜ˆìƒì¹˜ ëª»í•œ ì˜¤ë¥˜.\n");
 				break;
 			}
 		}
@@ -186,21 +190,21 @@ void myBackUp(char * srcPath, char * dstPath)
 }
 
 int main(int argc, char * argv[]) {
-	time_t curTime = time(NULL); // ÇöÀç ½Ã°£ ¹Ş¾Æ¿È
+	time_t curTime = time(NULL); // í˜„ì¬ ì‹œê°„ ë°›ì•„ì˜´
 	struct tm * d = localtime(&curTime);
 
-	// »ç¿ë¹æ¹ı
+	// ì‚¬ìš©ë°©ë²•
 	if (argc != 3)
 	{
 		printf("Usage : mybackup [srcpath] [dstpath]\n");
 		return -1;
 	}
 
-	// ¹é¾÷ÆÄÀÏ »ı¼º
+	// ë°±ì—…íŒŒì¼ ìƒì„±
 	log = fopen("mybackup.log", "a");
-	fprintf(log, "%d³â %d¿ù %dÀÏ %d½Ã %dºĞ %dÃÊ\n", d->tm_year + 1900, d->tm_mon + 1, d->tm_mday, d->tm_hour, d->tm_min, d->tm_sec);
+	fprintf(log, "%dë…„ %dì›” %dì¼ %dì‹œ %dë¶„ %dì´ˆ\n", d->tm_year + 1900, d->tm_mon + 1, d->tm_mday, d->tm_hour, d->tm_min, d->tm_sec);
 
-	// ½ÃÀÛ
+	// ì‹œì‘
 	myBackUp(argv[1], argv[2]);
 
 	return 0;
