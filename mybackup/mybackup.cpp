@@ -1,3 +1,7 @@
+/**
+ * Copyright (C) 2017 lunar456th@naver.com All rights reserved.
+ */
+
 #include <stdio.h>
 #include <string.h>
 #include <io.h>
