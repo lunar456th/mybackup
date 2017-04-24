@@ -1,7 +1,3 @@
-/**
- * Copyright ⓒ 2017 lunar456th@naver.com All rights reserved.
- */
-
 #include <stdio.h>
 #include <string.h>
 #include <io.h>
@@ -26,6 +22,8 @@ void _CreateDirectory(LPCTSTR dstPath) // 디렉토리 재귀 생성 함수
 	for (int i = 0; i <= len; i++)
 	{
 		pathBuffer[i] = *(dstPath + i);
+		if (pathBuffer[i] == '.')
+			break;
 		if (pathBuffer[i] == '\\' || pathBuffer[i] == '/' || i == len) // 경로가 이미 존재하는지 체크
 		{
 			pathBuffer[i + 1] = NULL; // 널문자 찍기
